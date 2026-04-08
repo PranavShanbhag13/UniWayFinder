@@ -1,0 +1,52 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: notification-service
+
+  # Dedicated PostgreSQL Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/uniwaydb_notification
+    username: uniwayuser
+    password: uniwaypass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Containerized RabbitMQ Connection
+  rabbitmq:
+    host: 192.168.17.132
+    port: 5672
+    username: admin
+    password: 1234
+    listener:
+      simple:
+        acknowledge-mode: manual # CRITICAL for at-least-once delivery
+        prefetch: 1
+
+# JWT Configuration (Synchronized with Identity Service) [cite: 124]
+jwt:
+  secret: VGhpc0lzQVN0cm9uZ0Jhc2U2NFNlY3JldEtleUZvckpXVEF1dGhFbmNvZGluZw==
+  expiration: 3600000
+
+# Logging & Observability
+logging:
+  level:
+    com.uniwayfinder.notification: DEBUG
+    org.springframework.amqp: INFO
+    org.hibernate.SQL: DEBUG
+
+# Custom Application Properties
+app:
+  rabbitmq:
+    exchange: uniwayfinder.topic.exchange
+    queue: notification.reminder.queue
+    routing-key: academic.reminder.schedule
