@@ -32,11 +32,6 @@ spring:
         acknowledge-mode: manual # CRITICAL for at-least-once delivery
         prefetch: 1
 
-# JWT Configuration (Synchronized with Identity Service) [cite: 124]
-jwt:
-  secret: VGhpc0lzQVN0cm9uZ0Jhc2U2NFNlY3JldEtleUZvckpXVEF1dGhFbmNvZGluZw==
-  expiration: 3600000
-
 # Logging & Observability
 logging:
   level:
