@@ -1,9 +1,6 @@
 package cuniwayfinderample.class_location_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 
 @Entity
 public class ClassLocation {
@@ -12,23 +9,28 @@ public class ClassLocation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String room;
+    private String classId;
     private String building;
+    private String floor;
+
+    public ClassLocation() {}
+
+    public ClassLocation(String classId, String building, String floor) {
+        this.classId = classId;
+        this.building = building;
+        this.floor = floor;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getClassId() {
+        return classId;
     }
 
-    public String getRoom() {
-        return room;
-    }
-
-    public void setRoom(String room) {
-        this.room = room;
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 
     public String getBuilding() {
@@ -37,5 +39,13 @@ public class ClassLocation {
 
     public void setBuilding(String building) {
         this.building = building;
+    }
+
+    public String getFloor() {
+        return floor;
+    }
+
+    public void setFloor(String floor) {
+        this.floor = floor;
     }
 }
