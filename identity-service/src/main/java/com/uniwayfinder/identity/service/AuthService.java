@@ -47,7 +47,10 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user);
+        // put the "role" into the token
+        java.util.Map<String, Object> extraClaims = new java.util.HashMap<>();
+        extraClaims.put("role", user.getRole().name());
+        String token = jwtService.generateToken(extraClaims, user);
         return new AuthResponse(token, "Bearer", user.getRole().name());
     }
 
@@ -62,7 +65,10 @@ public class AuthService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String token = jwtService.generateToken(user);
+        // put the "role" into the token
+        java.util.Map<String, Object> extraClaims = new java.util.HashMap<>();
+        extraClaims.put("role", user.getRole().name());
+        String token = jwtService.generateToken(extraClaims, user);
         return new AuthResponse(token, "Bearer", user.getRole().name());
     }
 
