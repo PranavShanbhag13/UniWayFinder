@@ -3,6 +3,7 @@ package com.uniwayfinder.notification.controller;
 import com.uniwayfinder.notification.dto.NotificationResponse;
 import com.uniwayfinder.notification.entity.Reminder;
 import com.uniwayfinder.notification.entity.ReminderStatus;
+import com.uniwayfinder.notification.exception.EntityNotFoundException;
 import com.uniwayfinder.notification.repository.ReminderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,10 +78,13 @@ public class NotificationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         log.info("Deleting notification {}", id);
-        if (reminderRepository.existsById(id)) {
-            reminderRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
+
+        // Throw our custom exception if the notification does not exist
+        if (!reminderRepository.existsById(id)) {
+            throw new EntityNotFoundException("Notification with ID " + id + " not found.");
         }
-        return ResponseEntity.notFound().build();
+
+        reminderRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

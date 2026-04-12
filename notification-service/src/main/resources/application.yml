@@ -47,4 +47,4 @@ app:
     routing-key: academic.reminder.schedule
 
 jwt:
-  secret: VGhpc0lzQVN0cm9uZ0Jhc2U2NFNIY3JldEtleUZvckpXVEF1dGhFbmNvZGluZw==
+  secret: "VGhpc0lzQVN0cm9uZ0Jhc2U2NFNlY3JldEtleUZvckpXVEF1dGhFbmNvZGluZw=="
