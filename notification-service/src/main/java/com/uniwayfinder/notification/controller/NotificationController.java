@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,12 +26,12 @@ public class NotificationController {
      * GET /api/notify/user
      */
     @GetMapping("/user")
-    public ResponseEntity<List<NotificationResponse>> getUserNotifications(
-            @RequestHeader("X-User-Id") String userId) {
+    public ResponseEntity<List<NotificationResponse>> getUserNotifications(Authentication authentication) {
+        // Safely get the username directly from the parsed Token context!
+        String username = authentication.getName();
+        log.info("Fetching all notifications for authenticated user: {}", username);
 
-        log.info("Fetching all notifications for gateway-authenticated user: {}", userId);
-
-        List<Reminder> reminders = reminderRepository.findByUserId(userId);
+        List<Reminder> reminders = reminderRepository.findByUserId(username);
 
         List<NotificationResponse> responses = reminders.stream()
                 .map(NotificationResponse::fromEntity)
@@ -42,12 +44,11 @@ public class NotificationController {
      * GET /api/notify/unread
      */
     @GetMapping("/unread")
-    public ResponseEntity<List<NotificationResponse>> getUnreadNotifications(
-            @RequestHeader("X-User-Id") String userId) {
+    public ResponseEntity<List<NotificationResponse>> getUnreadNotifications(Authentication authentication) {
+        String username = authentication.getName();
+        log.info("Fetching unread notifications for authenticated user: {}", username);
 
-        log.info("Fetching unread notifications for gateway-authenticated user: {}", userId);
-
-        List<Reminder> unreadReminders = reminderRepository.findByUserIdAndStatus(userId, ReminderStatus.SENT);
+        List<Reminder> unreadReminders = reminderRepository.findByUserIdAndStatus(username, ReminderStatus.SENT);
 
         List<NotificationResponse> responses = unreadReminders.stream()
                 .map(NotificationResponse::fromEntity)
@@ -72,6 +73,7 @@ public class NotificationController {
     /**
      * DELETE /api/notify/{id}
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         log.info("Deleting notification {}", id);

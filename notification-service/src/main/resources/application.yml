@@ -45,3 +45,6 @@ app:
     exchange: uniwayfinder.topic.exchange
     queue: notification.reminder.queue
     routing-key: academic.reminder.schedule
+
+jwt:
+  secret: VGhpc0lzQVN0cm9uZ0Jhc2U2NFNIY3JldEtleUZvckpXVEF1dGhFbmNvZGluZw==
