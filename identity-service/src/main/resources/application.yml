@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: identity-service
+  cloud:
+    nacos:
+      server-addr: 192.168.17.132:8848 # Nacos IP and Port
+  config:
+    import:
+      - optional:nacos:identity-service.yml # configuration file in Nacos
