@@ -23,6 +23,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF, standard for stateless microservices
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/test/**").permitAll() // Allow RabbitMQ test endpoint for Postman
+                        // 添加 "/api/notify/v3/api-docs/**"
+                        .requestMatchers("/api/test/**", "/api/notify/v3/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated() // All other endpoints require a valid JWT
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
