@@ -29,7 +29,7 @@ public class TestRabbitController {
     public ResponseEntity<String> sendTestEvent(@RequestBody ReminderEvent event) {
         log.info("【Test】Read for sending to MQ: {} with mock message: {}", queueName, event.getEventId());
 
-        // 发送消息到 RabbitMQ
+        // send message to RabbitMQ
         rabbitTemplate.convertAndSend(queueName, event);
 
         return ResponseEntity.ok("Mock message is already put into RabbitMQ successfully！");
