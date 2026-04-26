@@ -7,7 +7,7 @@ import cuniwayfinderample.class_location_service.entity.ClassLocation;
 import cuniwayfinderample.class_location_service.service.ClassLocationService;
 
 @RestController
-@RequestMapping("/api/class-location")
+@RequestMapping("/api/location")
 public class ClassLocationController {
 
     @Autowired

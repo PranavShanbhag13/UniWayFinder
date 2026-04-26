@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/engagement")
 @RequiredArgsConstructor
 public class EventController {
 

@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: location-service
+  cloud:
+    nacos:
+      server-addr: 192.168.17.132:8848
+  config:
+    import:
+      - optional:nacos:location-service.yml
