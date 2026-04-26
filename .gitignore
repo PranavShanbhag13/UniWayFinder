@@ -11,3 +11,26 @@
 # IntelliJ IDEA files
 .idea/
 *.iml
+
+target/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+*.iws
+*.ipr
+.vscode/
+
+*.log
+logs/
+temp/
+tmp/
+*.tmp
+*.bak
+*.swp
+
+.DS_Store
+Thumbs.db
