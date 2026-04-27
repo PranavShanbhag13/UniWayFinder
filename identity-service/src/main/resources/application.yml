@@ -3,7 +3,10 @@ spring:
     name: identity-service
   cloud:
     nacos:
-      server-addr: 192.168.17.132:8848 # Nacos IP and Port
-  config:
-    import:
-      - optional:nacos:identity-service.yml # configuration file in Nacos
+      discovery:
+        server-addr: ${NACOS_SERVER:192.168.17.132:8848}
+        namespace: ${NACOS_NAMESPACE:} # Default to empty (public)
+      config:
+        server-addr: ${NACOS_SERVER:192.168.17.132:8848}
+        file-extension: yml
+        namespace: ${NACOS_NAMESPACE:}
