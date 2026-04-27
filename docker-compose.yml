@@ -1,0 +1,142 @@
+version: '1.0'
+
+networks:
+  uniway_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  nacos_data:
+
+services:
+  # Tier 1: Infrastructure Services
+  db-postgres:
+    image: postgres:15-alpine
+    container_name: db-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: uniwayuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # read from CI/CD
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - uniway_net
+
+  mq-rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: mq-rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: ${MQ_PASSWORD} # read from CI/CD
+    networks:
+      - uniway_net
+
+  nacos-server:
+    image: nacos/nacos-server:v2.2.3
+    container_name: nacos-server
+    restart: always
+    environment:
+      - MODE=standalone
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    volumes:
+      - nacos_data:/home/nacos/data
+    networks:
+      - uniway_net
+
+  # Tier 2: Backend Microservices
+  api-gateway:
+    image: ianlaijun/uniwayfinder-api-gateway:latest
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - NACOS_NAMESPACE=prod
+      - NACOS_SERVER=nacos-server:8848
+    depends_on:
+      - nacos-server
+    networks:
+      - uniway_net
+
+  identity-service:
+    image: ianlaijun/uniwayfinder-identity-service:latest
+    container_name: identity-service
+    restart: always
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - NACOS_NAMESPACE=prod
+      - NACOS_SERVER=nacos-server:8848
+    depends_on:
+      - db-postgres
+      - nacos-server
+    networks:
+      - uniway_net
+
+  timetable-service:
+    image: ianlaijun/uniwayfinder-timetable-service:latest
+    container_name: timetable-service
+    restart: always
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MQ_PASSWORD=${MQ_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - NACOS_NAMESPACE=prod
+      - NACOS_SERVER=nacos-server:8848
+    depends_on:
+      - db-postgres
+      - mq-rabbitmq
+      - nacos-server
+    networks:
+      - uniway_net
+
+  location-service:
+    image: ianlaijun/uniwayfinder-location-service:latest
+    container_name: location-service
+    restart: always
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - NACOS_NAMESPACE=prod
+      - NACOS_SERVER=nacos-server:8848
+    depends_on:
+      - db-postgres
+      - nacos-server
+    networks:
+      - uniway_net
+
+  engagement-service:
+    image: ianlaijun/uniwayfinder-engagement-service:latest
+    container_name: engagement-service
+    restart: always
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - NACOS_NAMESPACE=prod
+      - NACOS_SERVER=nacos-server:8848
+    depends_on:
+      - db-postgres
+      - nacos-server
+    networks:
+      - uniway_net
+
+  notification-service:
+    image: ianlaijun/uniwayfinder-notification-service:latest
+    container_name: notification-service
+    restart: always
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MQ_PASSWORD=${MQ_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - NACOS_NAMESPACE=prod
+      - NACOS_SERVER=nacos-server:8848
+    depends_on:
+      - db-postgres
+      - mq-rabbitmq
+      - nacos-server
+    networks:
+      - uniway_net
