@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         # all the microservice folder name
-        service: [api-gateway, identity-service, notification-service, timetable-service, clss-location-service, engagement-service]
+        service: [api-gateway, identity-service, notification-service, timetable-service, class-location-service, engagement-service]
 
     steps:
       - name: Checkout Code
