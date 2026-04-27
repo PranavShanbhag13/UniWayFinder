@@ -10,3 +10,5 @@ spring:
         server-addr: ${NACOS_SERVER:192.168.17.132:8848}
         file-extension: yml
         namespace: ${NACOS_NAMESPACE:}
+  config:
+    import: optional:nacos:location-service.yml
