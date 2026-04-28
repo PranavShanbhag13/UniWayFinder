@@ -95,7 +95,7 @@ services:
       - uniway_net
 
   location-service:
-    image: ianlaijun/uniwayfinder-location-service:latest
+    image: ianlaijun/uniwayfinder-class-location-service:latest
     container_name: location-service
     restart: always
     environment:
